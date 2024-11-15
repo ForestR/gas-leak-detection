@@ -1,3 +1,8 @@
+0.1.2
+- Add utils.py
+- Add encode_report_data-1.py
+- Add encode_report_data-2.py
+
 0.1.1
 - Add encode_address.py
 

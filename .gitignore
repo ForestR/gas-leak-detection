@@ -62,8 +62,8 @@ venv.bak/
 *.pkl
 *.npy
 *.npz
-# Uncomment the following line if you want to ignore all data files
-# data/
+data/raw/
+data/interim/
 
 # Results and figures
 # Uncomment if you don't want to track generated figures
