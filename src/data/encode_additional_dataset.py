@@ -36,7 +36,7 @@ class DataEncoder:
             
         return self.encoding_manager.get_encoding_dict(category)[value]
 
-    def encode_address(self, address: str) -> Dict[str, Optional[str]]:
+    def encode_address(self, address: str) -> Dict[str, str]:
         """Encode a Chinese address into structured components."""
         if pd.isna(address):
             return {
@@ -69,7 +69,7 @@ class DataEncoder:
             
             # Extract numbers for different components
             for key, marker in self.building_types.items():
-                pattern = f'(\d+){key}'
+                pattern = fr'(\d+){key}'
                 match = re.search(pattern, address)
                 if match:
                     component_name = marker.rstrip('_')

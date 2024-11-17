@@ -3,10 +3,10 @@ import numpy as np
 import pandas as pd
 from scipy.ndimage import gaussian_filter1d
 
-def add_perturbation(flow_rate: float, time: np.ndarray) -> np.ndarray:
+def add_perturbation(flow_rate: np.ndarray | float, time: np.ndarray) -> np.ndarray:
     """
     Add random perturbation to the flow rate with two characteristic frequencies.
-    :param flow_rate: Base flow rate.
+    :param flow_rate: Base flow rate (float or numpy array).
     :param time: Array of time values.
     :return: Flow rate array with perturbations.
     """
@@ -84,8 +84,8 @@ def generate_flow_data(duration: int = 3600, chamber_volume: float = 0.01, super
         'actual_flow_rate': flow_rates_with_perturbation * 3600,  # Convert to m³/hour
         'pulse_counts': pulse_counts,
         'pulse_counts_per_minute': np.repeat(pulse_counts_per_minute, 60),
-        'observed_flow_rate': np.repeat(observed_flow_rates * 60, 60),  # Convert to m³/hour
-        'smoothed_flow_rate': np.repeat(smoothed_flow_rates * 60, 60)  # Convert to m³/hour
+        'observed_flow_rate': np.repeat(observed_flow_rates.astype(np.float64) * 60, 60),  # Convert to m³/hour
+        'smoothed_flow_rate': np.repeat(smoothed_flow_rates.astype(np.float64) * 60, 60)  # Convert to m³/hour
     })
 
     if superposition:

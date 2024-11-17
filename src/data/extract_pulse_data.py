@@ -49,9 +49,8 @@ def extract_pulse_data(raw_file: str, device_dates: Dict[str, List[str]], output
     # Read raw data file in chunks
     chunk_size = 10000
     column_map = {'表号': 'device_id', '数据': 'data'}
-    # Force 'data' column to be read as string
-    dtype_map = {'表号': str, '数据': str}
-    chunks = pd.read_csv(raw_file, chunksize=chunk_size, usecols=column_map.keys(), 
+    dtype_map = {'表号': str, '数据': str}  # Force 'data' column to be read as string
+    chunks = pd.read_csv(raw_file, chunksize=chunk_size, usecols=list(column_map.keys()), 
                         dtype=dtype_map, encoding='gbk')
     extracted_records = []
     

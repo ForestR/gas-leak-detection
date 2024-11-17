@@ -58,7 +58,7 @@ venv.bak/
 */.ipynb_checkpoints/*
 
 # Data files
-*.csv
+# *.csv
 *.dat
 *.pkl
 *.npy
@@ -122,3 +122,10 @@ coverage.xml
 *.tmp
 *.temp
 *~
+
+# Model files
+data/models/
+*.pth
+*.pt
+*.pkl
+
