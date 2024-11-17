@@ -1,10 +1,21 @@
+0.1.3
+- Add extract_pulse_data.py
+- Add data_processing_analysis.ipynb
+- Add pulse_data_analysis.ipynb
+
 0.1.2
 - Add utils.py
-- Add encode_report_data-1.py
+- Rename encode_address.py to encode_report_data-1.py
 - Add encode_report_data-2.py
 
 0.1.1
+- Add README.md
+- Add LICENSE
+- Add requirements.txt
+- Add generate_simulated_data.py
+- Add visualize_simulated_data.py
 - Add encode_address.py
 
 0.1.0
 - Initial version
+- Add VERSION

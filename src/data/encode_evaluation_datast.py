@@ -2,7 +2,7 @@ import pandas as pd
 import numpy as np
 from typing import Dict, List
 from pathlib import Path
-from utils import map_label
+from utils import map_label, EncodingDictManager
 
 def load_tp_data(file_path: str) -> pd.DataFrame:
     """Load true positive (TP) report data."""
@@ -29,28 +29,6 @@ def load_fp_data(file_path: str) -> pd.DataFrame:
     
     return df_fp
 
-def create_encoding_dict(series: pd.Series, prefix: str) -> Dict[str, str]:
-    """Create encoding dictionary for a column."""
-    # Get unique non-null values
-    unique_values = series.dropna().unique()
-    
-    # Create encoding dictionary
-    encoding_dict = {
-        value: f"{prefix}{str(i+1).zfill(3)}" 
-        for i, value in enumerate(sorted(unique_values))
-    }
-    
-    # Add MISSING handling
-    encoding_dict[np.nan] = 'MISSING'
-    encoding_dict[''] = 'MISSING'
-    encoding_dict['MISSING'] = 'MISSING'
-    
-    return encoding_dict
-
-def encode_column(series: pd.Series, encoding_dict: Dict[str, str]) -> pd.Series:
-    """Encode a column using the provided encoding dictionary."""
-    return series.map(lambda x: encoding_dict.get(x, 'MISSING'))
-
 def process_reports(tp_path: str, fp_path: str, output_path: str):
     """Process and merge TP and FP reports."""
     try:
@@ -61,16 +39,12 @@ def process_reports(tp_path: str, fp_path: str, output_path: str):
         # Merge dataframes
         df = pd.concat([df_tp, df_fp], ignore_index=True)
         
-        # Create encoding dictionaries
-        encoding_dicts = {
-            'usage': ('U', create_encoding_dict(df['usage'], 'U')),
-            'type': ('T', create_encoding_dict(df['type'], 'T')),
-            'annotation': ('A', create_encoding_dict(df['annotation'], 'A'))
-        }
+        # Initialize encoding manager
+        encoder = EncodingDictManager()
         
         # Encode columns
-        for col, (prefix, encoding_dict) in encoding_dicts.items():
-            df[f'{col}_encoded'] = encode_column(df[col], encoding_dict)
+        for col in ['device_id', 'usage', 'type', 'annotation']:
+            df[f'{col}_encoded'] = df[col].apply(lambda x: encoder.get_or_create_encoding(col, x))
         
         # Convert dates to standard format
         df['date_report'] = pd.to_datetime(df['date_report']).dt.strftime('%Y/%m/%d')
@@ -81,7 +55,7 @@ def process_reports(tp_path: str, fp_path: str, output_path: str):
         
         # Select and reorder columns
         output_df = df[[
-            'device_id',
+            'device_id_encoded',
             'usage_encoded',
             'type_encoded',
             'annotation_encoded',
@@ -103,8 +77,8 @@ def process_reports(tp_path: str, fp_path: str, output_path: str):
         print(f"FP records: {len(df_fp)}")
         
         print("\nEncoding Statistics:")
-        for col, (prefix, encoding_dict) in encoding_dicts.items():
-            unique_count = len([k for k, v in encoding_dict.items() 
+        for col in ['device_id', 'usage', 'type', 'annotation']:
+            unique_count = len([k for k, v in encoder.get_encoding_dict(col).items() 
                               if v != 'MISSING' and k is not np.nan])
             print(f"Unique {col}: {unique_count}")
         
@@ -122,7 +96,7 @@ if __name__ == "__main__":
     data_dir = Path("data")
     tp_file = data_dir / "raw" / "report_202401-202404_TP.csv"
     fp_file = data_dir / "raw" / "report_202401-202404_FP.csv"
-    output_file = data_dir / "processed" / "report_202401-202404.csv"
+    output_file = data_dir / "processed" / "evaluation_dataset.csv"
     
     # Process reports
     process_reports(str(tp_file), str(fp_file), str(output_file))

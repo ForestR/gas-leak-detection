@@ -41,6 +41,7 @@ venv.bak/
 *.sublime-project
 
 # LaTeX
+*.tex
 *.aux
 *.bbl
 *.blg

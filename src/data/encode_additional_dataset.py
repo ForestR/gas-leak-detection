@@ -4,11 +4,11 @@ import re
 import json
 from pathlib import Path
 from typing import List, Dict, Any, Optional
-from utils import map_label
+from utils import map_label, EncodingDictManager
 
 class DataEncoder:
     def __init__(self):
-        self.encoding_dicts = self._load_or_create_encoding_dicts()
+        self.encoding_manager = EncodingDictManager()
         self.building_types = {
             '期': 'phase_',
             '栋': 'building_',
@@ -19,45 +19,22 @@ class DataEncoder:
             '室': 'room_'
         }
         
-    def _load_or_create_encoding_dicts(self) -> Dict[str, Dict[str, str]]:
-        """Load existing encoding dictionaries or create new ones."""
-        encoding_file = Path('data/interim/encoding_dicts.json')
-        
-        if encoding_file.exists():
-            with open(encoding_file, 'r', encoding='utf-8') as f:
-                return json.load(f)
-        
-        return {
-            'community': {},
-            'usage': {},
-            'type': {},
-            'annotation': {}
-        }
-
-    def _save_encoding_dicts(self):
-        """Save encoding dictionaries to file."""
-        encoding_file = Path('data/interim/encoding_dicts.json')
-        encoding_file.parent.mkdir(parents=True, exist_ok=True)
-        
-        with open(encoding_file, 'w', encoding='utf-8') as f:
-            json.dump(self.encoding_dicts, f, ensure_ascii=False, indent=2)
-
     def _get_or_create_encoding(self, category: str, value: str) -> str:
         """Get existing encoding or create new one for a value."""
         if pd.isna(value) or value == '':
             return 'MISSING'
             
-        if value not in self.encoding_dicts[category]:
-            existing_codes = set(self.encoding_dicts[category].values())
-            new_code = f"{category[0].upper()}{len(self.encoding_dicts[category]) + 1:03d}"
+        if value not in self.encoding_manager.get_encoding_dict(category):
+            existing_codes = set(self.encoding_manager.get_encoding_dict(category).values())
+            new_code = f"{category[0].upper()}{len(self.encoding_manager.get_encoding_dict(category)) + 1:03d}"
             
             while new_code in existing_codes:
                 new_code = f"{category[0].upper()}{int(new_code[1:]) + 1:03d}"
                 
-            self.encoding_dicts[category][value] = new_code
-            self._save_encoding_dicts()
+            self.encoding_manager.get_encoding_dict(category)[value] = new_code
+            self.encoding_manager.save_dicts()
             
-        return self.encoding_dicts[category][value]
+        return self.encoding_manager.get_encoding_dict(category)[value]
 
     def encode_address(self, address: str) -> Dict[str, Optional[str]]:
         """Encode a Chinese address into structured components."""
@@ -129,9 +106,10 @@ class DataEncoder:
             return 'INVALID_ADDRESS'
 
     def encode_metadata(self, row: pd.Series) -> Dict[str, str]:
-        """Encode usage, type, and annotation fields."""
+        """Encode device_id, usage, type, and annotation fields."""
         try:
             return {
+                'device_id_encoded': self._get_or_create_encoding('device_id', row['device_id']),
                 'usage_encoded': self._get_or_create_encoding('usage', row['usage']),
                 'type_encoded': self._get_or_create_encoding('type', row['type']),
                 'annotation_encoded': self._get_or_create_encoding('annotation', row['annotation'])
@@ -140,6 +118,7 @@ class DataEncoder:
             print(f"Error encoding metadata for row: {row}")
             print(f"Error details: {str(e)}")
             return {
+                'device_id_encoded': 'ERROR',
                 'usage_encoded': 'ERROR',
                 'type_encoded': 'ERROR',
                 'annotation_encoded': 'ERROR'
@@ -184,15 +163,18 @@ def process_csv(input_path: str, output_path: str):
         
         # Create output DataFrame with selected columns
         output_df = pd.DataFrame({
-            'device_id': df['device_id'],
+            'device_id_encoded': encoded_metadata.apply(lambda x: x['device_id_encoded']),
             'address_encoded': df['address_encoded'],
             'usage_encoded': encoded_metadata.apply(lambda x: x['usage_encoded']),
             'type_encoded': encoded_metadata.apply(lambda x: x['type_encoded']),
             'annotation_encoded': encoded_metadata.apply(lambda x: x['annotation_encoded']),
-            'date_report': df['date_report'].dt.strftime('%Y/%m/%d'),  # Updated format
-            'date_inspect': df['date_inspect'].dt.strftime('%Y/%m/%d'),  # Updated format
+            'date_report': df['date_report'].dt.strftime('%Y/%m/%d'),
+            'date_inspect': df['date_inspect'].dt.strftime('%Y/%m/%d'),
             'label': df['label']
         })
+
+        # Sort by date_report
+        output_df = output_df.sort_values(by='date_report', ascending=True)
         
         # Save the processed data
         output_df.to_csv(output_path, index=False)
@@ -201,10 +183,11 @@ def process_csv(input_path: str, output_path: str):
         print("\nEncoding Statistics:")
         print(f"Total records processed: {len(df)}")
         print(f"Valid records: {len(output_df)}")
-        print(f"Unique communities: {len(encoder.encoding_dicts['community'])}")
-        print(f"Unique usage types: {len(encoder.encoding_dicts['usage'])}")
-        print(f"Unique event types: {len(encoder.encoding_dicts['type'])}")
-        print(f"Unique annotations: {len(encoder.encoding_dicts['annotation'])}")
+        print(f"Unique devices: {len(encoder.encoding_manager.get_encoding_dict('device_id'))}")
+        print(f"Unique communities: {len(encoder.encoding_manager.get_encoding_dict('community'))}")
+        print(f"Unique usage types: {len(encoder.encoding_manager.get_encoding_dict('usage'))}")
+        print(f"Unique event types: {len(encoder.encoding_manager.get_encoding_dict('type'))}")
+        print(f"Unique annotations: {len(encoder.encoding_manager.get_encoding_dict('annotation'))}")
         
         # Print data quality report
         print("\nData Quality Report:")
@@ -221,7 +204,7 @@ if __name__ == "__main__":
     # Define file paths
     data_dir = Path("data")
     input_file = data_dir / "raw" / "report_202406-202407.csv"
-    output_file = data_dir / "processed" / "report_202406-202407.csv"
+    output_file = data_dir / "processed" / "additional_dataset.csv"
     
     # Process CSV
     process_csv(str(input_file), str(output_file))
