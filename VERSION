@@ -1,3 +1,7 @@
+0.1.5
+- Modify evaluate.py
+- Add docs/figures/model_performance_metrics.png and model_performance_roc.png
+
 0.1.4
 - Add evaluate.py
 - Add plot_model_results.py
