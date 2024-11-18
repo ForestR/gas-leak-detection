@@ -1,6 +1,6 @@
-# Micro Leak Detection of Natural Gas for Residential Users based on Gas Flowmeters
+# Micro Leak Detection of Natural Gas for Residential Users Based on Gas Flowmeters
 
-This repository contains the code and data for the paper "Micro Leak Detection of Natural Gas for Residential Users based on Gas Flowmeters" accepted at IEEE ICIT 2024.
+This repository contains the code and data for the paper "Micro Leak Detection of Natural Gas for Residential Users Based on Gas Flowmeters" accepted at IEEE ICIT 2024.
 
 ## Abstract
 This paper presents a novel approach to detecting small residential gas leaks by developing and testing a leakage detection algorithm, termed the Weeg algorithm. Using real-world data from household gas meters and simulating both normal and leak conditions, we benchmarked the Weeg algorithm against traditional detection methods. The evaluation was performed on a dataset containing 86 leakage samples and 1103 non-leakage samples. The Weeg algorithm demonstrated significant improvements, achieving an accuracy of 90.2\% and an F1 score of 0.458, while reducing false positive rates compared to conventional algorithms.
