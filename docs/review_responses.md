@@ -128,6 +128,9 @@ Thank you for your thoughtful comment and for highlighting the need for clarific
   </span>
 
 #### TODO: Revised text:  
+
+**Clarification on Physical Model**: Specify whether you are using actual integrals in your simulations or approximations. Detail any discretization methods used in your model.
+
   <span style="color:blue">
 *Section X, Paragraph Y: "For computational efficiency, the integrals are approximated by summing discrete time intervals, enabling practical simulation of gas flow behavior over time."*
   </span>
@@ -144,6 +147,9 @@ Thank you for your valuable feedback. We have expanded our discussion of the rea
   </span>
 
 #### TODO: Revised text:  
+
+**Real-time Classification Insights**: Expand on the real-time classification aspect of your model, especially regarding how it processes and classifies potential leaks. Clarify how your model functions with real-time data.
+
   <span style="color:blue">
 *Section X, Paragraph Y: "Our proposed approach processes real-time data streams to classify potential leak events. Unlike other time series classification methods, our model prioritizes accuracy under low-flow conditions, a common scenario in micro-leak detection. By leveraging sequential dependencies and anomaly patterns in time-series data, our model demonstrates improved precision and recall compared to state-of-the-art techniques. This allows for timely detection while minimizing false positives, critical for practical implementation."*
   </span>
@@ -160,6 +166,9 @@ All figures have been updated with English labels to ensure they are accessible 
   </span>
 
 #### TODO: Revised text:  
+
+**Legibility of Figures**: Ensure all figures, including labels, are in English and legible for an international audience.
+
   <span style="color:blue">
 *Figures X and Y now contain English labels to enhance legibility and accessibility for all readers.*
   </span>
@@ -167,35 +176,57 @@ All figures have been updated with English labels to ensure they are accessible 
 
 ### Comment 4:  
   <span style="color:black">
-The authors should consider to better identify how the Seq2Seq model is then associated to the detection of a leak.
-
-Given this, it seems that the authors are providing the classification by estimating the leak through a Seq2Seq model which transforms the nominal flows into the target flow. Then, the pulse model for a real-life sensor is likely attach to the resulting sequence, from which the leak can be detected and the pulses can be sent.
-Not with standing the former, the authors provide no explicit pipeline to process these, and therefore the previous sentence is mainly resumed from the information being available form the text. Still, the authors should consider to better identify how the Seq2Seq model is then associated to the detection of a leak. If they are actually using the pulse model, then the overall task boils down to a binary classification problem, where the binary condition is just associated to the increase of the \Theta parameter. Thus, the overall analysis should also reflect the similarity between the forecasted resulting sequence and the expected one (e.g., Dynamic Time Warping), thus remarking the similarity and differences between predicted and expected sequence. This outcome will then motivate the results already provided in Table 2 and 3, which are likely to be associated with the aforementioned pulse detection but, the classification outcome shall be ultimately related to the quality of the resulting time series.
-
+Given this, it seems that the authors are providing the classification by estimating the leak through a Seq2Seq model which transforms the nominal flows into the target flow. Then, the pulse model for a real-life sensor is likely attach to the resulting sequence, from which the leak can be detected and the pulses can be sent. Not with standing the former, the authors provide no explicit pipeline to process these, and therefore the previous sentence is mainly resumed from the information being available form the text. 
   </span>
 
-**Response:**  
-<span style="color:red">
-We have expanded our explanation of the Seq2Seq model's role in leak detection, providing a clearer description of how it processes input flows and outputs leak predictions.
-</span>
+#### Response:  
+  <span style="color:red">
+Thank you for your detailed observation. We have expanded the explanation of our pipeline, explicitly detailing the role of each component in the leakage detection process. Our project incorporates three interrelated models: 
+  </span>
 
-**Revised text:**  
-<span style="color:blue">
-*Section X, Paragraph Y: "The Seq2Seq model translates observed flow rates into a predicted flow sequence, which is then used to identify leaks based on deviations from expected patterns."*
-</span>
+<ul style="color: red;">
+  <li>A <strong>physics-based underlying model</strong> improves interpretability and simulates datasets for training the Seq2Seq model.</li>
+  <li>A <strong>Seq2Seq generative model</strong> transforms nominal flow data into actual flow estimates for unsupervised annotation.</li>
+  <li>A <strong>CNN-based neural network</strong> performs supervised classification on the labeled datasets for real-time leakage detection.</li>
+</ul>
+  <span style="color:red">
+The pipeline now provides a comprehensive and explicit process, connecting each model to its specific task and emphasizing their integration in the overall system.
+  </span>
+
+#### TODO: Revised text:  
+
+  <span style="color:blue">
+*Section X, Paragraph Y:*
+  </span>
+
+  <span style="color:blue">
+*"Our pipeline integrates physics-based simulation, generative modeling, and supervised classification to address leakage detection comprehensively. The process begins with a physics-based underlying model, which simulates realistic gas flow scenarios to generate training datasets for a Seq2Seq model. This model leverages nominal flow rates recorded by membrane flowmeters to estimate actual flow rates, accounting for deviations due to small leaks. By analyzing these deviations, the Seq2Seq model performs unsupervised labeling of real-world data.*
+  </span>
+
+  <span style="color:blue">
+*The labeled datasets are then used to train a CNN-based neural network, which performs real-time classification of leakage events. This pipeline ensures robust detection by combining physical insights with advanced time-series modeling and classification techniques. The integration of these models addresses challenges like low-flow scenarios, providing a clear pathway from raw sensor data to actionable leakage detection outputs."*
+  </span>
 
 
 ### Comment 5:  
   <span style="color:black">
-The authors should consider addressing all of the previous questions prior to acceptance.
+Still, the authors should consider to better identify how the Seq2Seq model is then associated to the detection of a leak. If they are actually using the pulse model, then the overall task boils down to a binary classification problem, where the binary condition is just associated to the increase of the \Theta parameter. Thus, the overall analysis should also reflect the similarity between the forecasted resulting sequence and the expected one (e.g., Dynamic Time Warping), thus remarking the similarity and differences between predicted and expected sequence. This outcome will then motivate the results already provided in Table 2 and 3, which are likely to be associated with the aforementioned pulse detection but, the classification outcome shall be ultimately related to the quality of the resulting time series.
   </span>
 
-**Response:**  
-<span style="color:red">
-All of the reviewer’s comments have been addressed with revisions in the manuscript as outlined above, improving the clarity, comprehensiveness, and accessibility of the paper.
-</span>
+#### Response:  
+  <span style="color:red">
+Thank you for this valuable observation. Indeed, our pipeline integrates the Seq2Seq model as a preprocessing step for unsupervised annotation. This model helps convert observed pulse time series (nominal flow rates) into sequences annotated with potential leakage events. These annotations are used to train our primary detection model—a CNN-based neural network designed for binary classification (leakage or no leakage).
+  </span>
 
-**Revised text:**  
-<span style="color:blue">
-*We trust that these revisions fulfill the reviewer’s expectations and have enhanced the overall quality of the manuscript.*
-</span>
+  <span style="color:red">
+The CNN-based neural network takes nominal flow rates (pulse sequences) as input. Its task is to classify each sequence as either "leakage" or "no leakage." The CNN model produces a likelihood score, which we normalize to a range of 0–100. This score serves as a confidence metric, and we fine-tune the $\Theta$ parameter to align predictions with specific business requirements.
+  </span>
+
+  <span style="color:red">
+To better demonstrate the effectiveness of our classification approach, we have incorporated a Receiver Operating Characteristic (ROC) curve. This provides a clear visual representation of the trade-off between true positive and false positive rates at varying thresholds. The ROC curve complements the results in Tables 2 and 3, which highlight the performance metrics under different parameter settings.
+  </span>
+
+  <span style="color:red">
+While we recognize the potential of using Dynamic Time Warping (DTW) to assess the similarity between forecasted and expected sequences, this aspect remains unimplemented in the current study. We agree that DTW could provide valuable insights into the alignment and quality of the resulting time series, and we plan to explore this avenue in our future work. Incorporating DTW could further enhance the robustness of the Seq2Seq annotations and improve the overall pipeline.
+  </span>
+  
