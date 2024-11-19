@@ -33,11 +33,11 @@ This paper will be published in the ACM Conference Proceedings (ISBN: 979-8-4007
 ```bibtex
 @inproceedings{yin2024micro,
   title={Micro Leak Detection of Natural Gas for Residential Users Based on Gas Flowmeters},
-  author={Yin, Da and Ni, Weiping and Shu, Fangcun},
+  author={Yin, Alex Da and Ni, Weiping and Shu, Fangcun},
   booktitle={Proceedings of the 12th International Conference on Information Technology: IoT and Smart City},
   pages={},
   year={2024},
-  isbn={979-8-4007-1737-6},
+  isbn={},
   publisher={Association for Computing Machinery},
   address={Kuala Lumpur, Malaysia}
 }
@@ -48,10 +48,10 @@ This project is licensed under the MIT License. See the [LICENSE](LICENSE) file 
 
 ## Contact
 For any inquiries about the code or paper, please contact:
-- Da Yin (dyin1900@gmail.com)
+- Alex Da Yin (dyin1900@gmail.com)
 
 ## Conference Information
 - **Conference**: ICIT 2024 - The 12th International Conference on Information Technology: IoT and Smart City
 - **Date**: December 13-15, 2024
 - **Venue**: University of Malaya, Kuala Lumpur, Malaysia
-- **Website**: http://www.icit.org/
+- **Website**: https://www.icit.org/
