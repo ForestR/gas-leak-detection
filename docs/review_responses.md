@@ -21,10 +21,19 @@ We invite you to review the revised figures in our manuscript on [Github](https:
   </span>
 
 
-#### TODO: Revised text: 
+#### Revised text: 
   <span style="color:blue">
-*Figure X has been updated to improve clarity, with enlarged labels and enhanced visual quality to facilitate understanding.*
+*Figure 1,2,3 has been updated to improve clarity, with enlarged labels and enhanced visual quality to facilitate understanding.*
   </span>
+
+  <span style="color:blue">
+*Figure 4 has been replaced with the ROC curve.*
+  </span>
+
+  <span style="color:blue">
+*Figure 5 has been updated to include threshold 0, 40 and 60. The illegal chinese characters have been converted to english. The color map is set to colorblind friendly.*
+  </span>
+
 
 ### Comment 2:  
   <span style="color:black;">
@@ -54,11 +63,16 @@ The baseline model is a logic-based algorithm. Its detection logic is defined as
 In this table, "duration" refers to the number of hours, "bottom" and "top" represent the hourly pulse counts, and "label" indicates the assigned risk level.
   </span>
 
-  <span style="color:red;">Our proposed model made breakthroughs in the accuracy of the report and the efficiency of the calculation, compared with the baseline model.  We developed a physics-based underlying model to generate the training dataset of the seq2seq model used for unsupervised annotation on actual dataset. The performance of our proposed model shows the advantages of using this method.</span>
+  <span style="color:red;">Our proposed model made breakthroughs in the accuracy of the report and the efficiency of the calculation, compared with the baseline model.  We developed a physics-based underlying model to generate the training dataset of the seq2seq model used for unsupervised annotation on actual dataset. The performance of our proposed model shows the advantages of using this method.</span>
 
-#### TODO: Revised text:  
+#### Revised text:  
+
+  <span style="color:blue">
+*Section 5, Paragraph 3:*
+  </span>
+
 <span style="color:blue">
-*Section Y, Paragraph Z: "The low accuracy and F1 score of 0.135 for the traditional algorithm underscore its limitations in detecting micro-leaks in low-flow scenarios, highlighting the advantage of our proposed method under such conditions."*
+*"The baseline model is a logic-based algorithm. Its detection logic is defined as follows: if the duration of continuous and stable gas usage exceeds the corresponding threshold in specific flow intervals, the user is flagged as at risk."*
 </span>
 
 ### Comment 3:
@@ -68,14 +82,30 @@ Please discuss the disadvantages of using this method (if any).
 
 #### Response: 
   <span style="color:red">
-We have addressed the limitations of our approach by including a detailed analysis of its performance using a ROC curve. Additionally, we have discussed potential challenges in real-time deployment and sensitivity to gas equipment, especially for intelligent timing gas.
+Thank you for this insightful question. Our project incorporates three interrelated models, each contributing to a comprehensive solution: 
   </span>
 
-#### TODO: Revised text:  
-<span style="color:blue">
-*Section Y, Paragraph Z: "While effective in controlled settings, the method may face challenges in real-time applications, particularly in environments with fluctuating temperature and pressure, which could affect leak detection accuracy."*
-</span>
+<ul style="color: red;">
+  <li>A <strong>physics-based underlying model</strong> that enhances interpretability by simulating datasets used to train the Seq2Seq model.</li> 
+  <li>A <strong>Seq2Seq generative model</strong> that converts nominal flow data into actual flow estimates, enabling unsupervised annotation for detecting deviations.</li>
+  <li>A <strong>CNN-based neural network</strong> that uses the annotated datasets for supervised classification, providing real-time leakage detection. </li>
+</ul>
 
+  <span style="color:red">
+While this integrated approach provides significant advantages in accuracy and adaptability, it does have some challenges.
+  </span>
+
+  <span style="color:red">
+The pipeline introduces additional complexity compared to a simple logic-based baseline model. Maintaining this system requires continuous updates to both the training datasets for the CNN model and the simulated datasets for the Seq2Seq model. This demands additional computational resources and expertise.
+  </span>
+
+  <span style="color:red">
+Our CNN-based model is sensitive to gas appliances equipped with intelligent timing functions. This can lead to false positive (FP) predictions if the pulse time series data is analyzed over a narrow time window (e.g., window_width = 1 hour). Conversely, using a broad time domain (e.g., window_width = 24 hours) can be problematic, as certain user behaviors, such as forgetting to close a stove valve, can introduce noise and reduce the system's ability to provide timely risk warnings.
+  </span>
+
+  <span style="color:red">
+There are also limitations on the use case. The performance of the Seq2Seq model heavily depends on the quality of the simulated datasets generated by the physics-based model. If the simulated datasets fail to accurately represent real-world conditions, the overall detection performance may degrade. This is why we have spent considerable time describing the structure and technical principles of gas flowmeters in Section 3.
+  </span>
 
 ### Comment 4:
   <span style="color:black">
@@ -124,15 +154,17 @@ The authors provide an adequate description of the physical model, which can be 
 
 #### Response:  
   <span style="color:red">
-Thank you for your thoughtful comment and for highlighting the need for clarification regarding our computational approach. In response, we have revised the Methods section to explicitly state that the integrals are approximated using summation for discrete time steps in our simulations. This ensures consistency between the described physical model and the actual computations performed during data generation. 
+Thank you for your thoughtful comment and for highlighting the need for clarification regarding our computational approach. In response, we have revised the Section 4.1 to explicitly state that the integrals are approximated using summation for discrete time steps in our simulations. This ensures consistency between the described physical model and the actual computations performed during data generation. You can find more details in our example [script](https://github.com/ForestR/gas-leak-detection/blob/main/data/processed/simulated_flow_data.csv).
   </span>
 
-#### TODO: Revised text:  
-
-**Clarification on Physical Model**: Specify whether you are using actual integrals in your simulations or approximations. Detail any discretization methods used in your model.
+#### Revised text:  
 
   <span style="color:blue">
-*Section X, Paragraph Y: "For computational efficiency, the integrals are approximated by summing discrete time intervals, enabling practical simulation of gas flow behavior over time."*
+*Section 4.1, Paragraph 3:*
+  </span>
+
+  <span style="color:blue">
+*"To replicate realistic gas flow patterns, we referred to the typical gas usage of common household appliances, such as water heaters, stoves, and boilers, as outlined in Table~\ref{tab:gas_consumption}. The simulation model was built on pulse metering principles derived from the operational characteristics of membrane gas flowmeters, mapping each device's gas consumption to nominal and actual flow rates under steady-state conditions. The integrals are approximated using summation for discrete time steps in our simulations. "*
   </span>
 
 
@@ -143,15 +175,25 @@ Despite the authors are correctly addressing the literature on leak detection, a
 
 #### Response:  
   <span style="color:red;"> 
-Thank you for your valuable feedback. We have expanded our discussion of the real-time classification process to provide greater clarity and detail. Specifically, we have included a comprehensive explanation of how our model processes time-series data to classify leaks in real-time and highlighted its comparative advantages over existing state-of-the-art time series classification methods. The revised text elaborates on the model's ability to achieve high prediction accuracy under low-flow conditions, a key challenge in leak detection. 
+Thank you for your valuable feedback. We have expanded our discussion of the real-time classification process to provide greater clarity. Our primary focus in this work has been on developing an effective data acquisition and annotation pipeline using the Seq2Seq model, and leveraging a CNN-based neural network as the backbone for time series classification tasks. While our current approach demonstrates reliable performance, we acknowledge the potential for further improvement by exploring more advanced architectures. In future work, we plan to investigate and integrate state-of-the-art time series classification models into our framework and conduct a comprehensive comparative analysis to benchmark performance across various conditions. This iterative approach will allow us to further optimize the classification process and address the broader spectrum of challenges in real-time leak detection. 
   </span>
 
-#### TODO: Revised text:  
-
-**Real-time Classification Insights**: Expand on the real-time classification aspect of your model, especially regarding how it processes and classifies potential leaks. Clarify how your model functions with real-time data.
+#### Revised text:  
 
   <span style="color:blue">
-*Section X, Paragraph Y: "Our proposed approach processes real-time data streams to classify potential leak events. Unlike other time series classification methods, our model prioritizes accuracy under low-flow conditions, a common scenario in micro-leak detection. By leveraging sequential dependencies and anomaly patterns in time-series data, our model demonstrates improved precision and recall compared to state-of-the-art techniques. This allows for timely detection while minimizing false positives, critical for practical implementation."*
+*Section 5, Paragraph 8:*
+  </span>
+
+  <span style="color:blue">
+*"Compared to baseline model, our approach offers notable advantages. Firstly, the physics-based underlying model improves interpretability and allows the generation of realistic simulated datasets, bridging the gap between synthetic and real-world scenarios. Secondly, the CNN-based classifier excels in detecting leaks under low-flow conditions, where traditional methods often struggle due to insufficient signal strength. Furthermore, we implement a likelihood-based confidence scoring mechanism, normalized between 0 and 100, allowing flexible adjustment of the classification threshold ($\Theta$) to meet varying operational requirements."*
+  </span>
+
+  <span style="color:blue">
+*Section 5, Paragraph 9:*
+  </span>
+
+  <span style="color:blue">
+*"A key contribution of this work is the introduction of a low-cost method for unsupervised data labeling of gas flowmeter pulse time series, addressing the scarcity of annotated data—a major limitation for traditional approaches. Even with the simplest CNN model, our methodology achieves remarkable performance in binary time-series classification tasks, highlighting its efficiency and practicality."*
   </span>
 
 
@@ -165,12 +207,18 @@ As a side note, most of the figures are completely illegible, as most of the lab
 All figures have been updated with English labels to ensure they are accessible to the international audience.
   </span>
 
-#### TODO: Revised text:  
-
-**Legibility of Figures**: Ensure all figures, including labels, are in English and legible for an international audience.
+#### Revised text:  
 
   <span style="color:blue">
-*Figures X and Y now contain English labels to enhance legibility and accessibility for all readers.*
+*Figure 1,2,3 has been updated to improve clarity, with enlarged labels and enhanced visual quality to facilitate understanding.*
+  </span>
+
+  <span style="color:blue">
+*Figure 4 has been replaced with the ROC curve.*
+  </span>
+
+  <span style="color:blue">
+*Figure 5 has been updated to include threshold 0, 40 and 60. The illegal chinese characters have been converted to english. The color map is set to colorblind friendly.*
   </span>
 
 
@@ -193,18 +241,30 @@ Thank you for your detailed observation. We have expanded the explanation of our
 The pipeline now provides a comprehensive and explicit process, connecting each model to its specific task and emphasizing their integration in the overall system.
   </span>
 
-#### TODO: Revised text:  
+#### Revised text:  
 
   <span style="color:blue">
-*Section X, Paragraph Y:*
+*Abstract:*
   </span>
 
   <span style="color:blue">
-*"Our pipeline integrates physics-based simulation, generative modeling, and supervised classification to address leakage detection comprehensively. The process begins with a physics-based underlying model, which simulates realistic gas flow scenarios to generate training datasets for a Seq2Seq model. This model leverages nominal flow rates recorded by membrane flowmeters to estimate actual flow rates, accounting for deviations due to small leaks. By analyzing these deviations, the Seq2Seq model performs unsupervised labeling of real-world data.*
+This paper presents a novel approach to detecting small residential gas leaks by developing and testing a leakage detection algorithm, termed the Weeg algorithm. Our proposed methodology combines a Seq2Seq generative model with a CNN-based classification network, enabling a robust and efficient approach to this task. The evaluation was performed on a dataset containing 86 leakage samples and 1103 non-leakage samples. The Weeg algorithm demonstrated significant improvements, achieving an accuracy of 90.2\% and an F1 score of 0.458, while reducing false positive rates compared to conventional logic-based algorithms.
   </span>
 
   <span style="color:blue">
-*The labeled datasets are then used to train a CNN-based neural network, which performs real-time classification of leakage events. This pipeline ensures robust detection by combining physical insights with advanced time-series modeling and classification techniques. The integration of these models addresses challenges like low-flow scenarios, providing a clear pathway from raw sensor data to actionable leakage detection outputs."*
+*Section 4.3, Paragraph 3:*
+  </span>
+
+  <span style="color:blue">
+*"This method of unsupervised labeling is particularly advantageous because it eliminates the need for labor-intensive manual labeling of leakage events, which are often rare and difficult to observe directly. Additionally, it enables the generation of large labeled datasets from real-world data, facilitating the training of downstream models for real-time leak detection. These annotations are used to train our primary detection model—a CNN-based neural network designed for binary classification (leakage or no leakage)."*
+  </span>
+
+  <span style="color:blue">
+*Section 5 Paragraph 4:*
+  </span>
+
+  <span style="color:blue">
+*"The CNN-based neural network takes nominal flow rates (pulse sequences) as input. Its task is to classify each sequence as either "leakage" or "no leakage." The CNN model produces a likelihood score, which we normalize to a range of 0–100. This score serves as a confidence metric, and we fine-tune the threshold parameter to balance the model performance. When the threshold is set to 0, the proposed model degenerates into the baseline model."*
   </span>
 
 
@@ -219,8 +279,8 @@ Thank you for this valuable observation. Indeed, our pipeline integrates the Seq
   </span>
 
   <span style="color:red">
-The CNN-based neural network takes nominal flow rates (pulse sequences) as input. Its task is to classify each sequence as either "leakage" or "no leakage." The CNN model produces a likelihood score, which we normalize to a range of 0–100. This score serves as a confidence metric, and we fine-tune the $\Theta$ parameter to align predictions with specific business requirements.
-  </span>
+The CNN-based neural network takes nominal flow rates (pulse sequences) as input. Its task is to classify each sequence as either "leakage" or "no leakage." The CNN model produces a likelihood score, which we normalize to a range of 0–100. This score serves as a confidence metric, and we fine-tune the threshold parameter to align predictions with specific business requirements.
+When the threshold is set to 0, the proposed model degenerates into the baseline model.  </span>
 
   <span style="color:red">
 To better demonstrate the effectiveness of our classification approach, we have incorporated a Receiver Operating Characteristic (ROC) curve. This provides a clear visual representation of the trade-off between true positive and false positive rates at varying thresholds. The ROC curve complements the results in Tables 2 and 3, which highlight the performance metrics under different parameter settings.
@@ -229,4 +289,6 @@ To better demonstrate the effectiveness of our classification approach, we have 
   <span style="color:red">
 While we recognize the potential of using Dynamic Time Warping (DTW) to assess the similarity between forecasted and expected sequences, this aspect remains unimplemented in the current study. We agree that DTW could provide valuable insights into the alignment and quality of the resulting time series, and we plan to explore this avenue in our future work. Incorporating DTW could further enhance the robustness of the Seq2Seq annotations and improve the overall pipeline.
   </span>
-  
+
+---
+
