@@ -32,7 +32,7 @@ This paper will be published in the ACM Conference Proceedings (ISBN: 979-8-4007
 ## Citation
 ```bibtex
 @inproceedings{yin2024micro,
-  title={Micro Leak Detection of Natural Gas for Residential Users based on Gas Flowmeters},
+  title={Micro Leak Detection of Natural Gas for Residential Users Based on Gas Flowmeters},
   author={Yin, Da and Ni, Weiping and Shu, Fangcun},
   booktitle={Proceedings of the 12th International Conference on Information Technology: IoT and Smart City},
   pages={},
