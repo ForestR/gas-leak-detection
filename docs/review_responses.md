@@ -17,7 +17,7 @@ We appreciate the feedback regarding the figures in our manuscript. We've carefu
   </span>
 
   <span style="color:red">
-We invite you to review the revised figures in our manuscript on [Github](./figures). We believe these improvements will significantly enhance the overall presentation and understanding of our research.
+We invite you to review the revised figures in our manuscript on [Github](https://github.com/ForestR/gas-leak-detection/blob/main/docs/figures). We believe these improvements will significantly enhance the overall presentation and understanding of our research.
   </span>
 
 
@@ -42,7 +42,7 @@ The performance of the traditional algorithm, which yielded an accuracy of only 
 
 #### Response:   
   <span style="color:red;">
-The low performance of the baseline model (traditional algorithm) highlights the challenges inherent in micro-leak detection when using a single gas flowmeter in a kitchen setting. In this project, approximately 250,000 IoT gas flowmeter devices are deployed. Over the past several years, the city gas supplier has used the baseline model for daily leakage detection. For validation, a subset of positive reports from the baseline model was selected at semi-random intervals for manual door-to-door inspection. These inspections included the use of handheld concentration meters and valve closure pressure retention tests. Our [evaluation dataset](../data/processed/evaluation_dataset.csv) consists of these manually validated positive results, ensuring its reliability.
+The low performance of the baseline model (traditional algorithm) highlights the challenges inherent in micro-leak detection when using a single gas flowmeter in a kitchen setting. In this project, approximately 250,000 IoT gas flowmeter devices are deployed. Over the past several years, the city gas supplier has used the baseline model for daily leakage detection. For validation, a subset of positive reports from the baseline model was selected at semi-random intervals for manual door-to-door inspection. These inspections included the use of handheld concentration meters and valve closure pressure retention tests. Our [evaluation dataset](https://github.com/ForestR/gas-leak-detection/blob/main/data/processed/evaluation_dataset.csv) consists of these manually validated positive results, ensuring its reliability.
   </span>
 
   <span style="color:red;">
@@ -154,7 +154,7 @@ The authors provide an adequate description of the physical model, which can be 
 
 #### Response:  
   <span style="color:red">
-Thank you for your thoughtful comment and for highlighting the need for clarification regarding our computational approach. In response, we have revised the Section 4.1 to explicitly state that the integrals are approximated using summation for discrete time steps in our simulations. This ensures consistency between the described physical model and the actual computations performed during data generation. You can find more details in our example [script](../data/processed/simulated_flow_data.csv).
+Thank you for your thoughtful comment and for highlighting the need for clarification regarding our computational approach. In response, we have revised the Section 4.1 to explicitly state that the integrals are approximated using summation for discrete time steps in our simulations. This ensures consistency between the described physical model and the actual computations performed during data generation. You can find more details in our example [script](https://github.com/ForestR/gas-leak-detection/blob/main/data/processed/simulated_flow_data.csv).
   </span>
 
 #### Revised text:  
